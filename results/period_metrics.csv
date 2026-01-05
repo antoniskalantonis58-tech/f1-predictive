@@ -1,0 +1,16 @@
+period,model,accuracy,auc
+2000-2004,Baseline,0.476,0.500
+2000-2004,Logistic Regression,0.695,0.693
+2000-2004,Random Forest,0.661,0.662
+2005-2009,Baseline,0.480,0.500
+2005-2009,Logistic Regression,0.733,0.731
+2005-2009,Random Forest,0.739,0.738
+2010-2014,Baseline,0.433,0.500
+2010-2014,Logistic Regression,0.754,0.750
+2010-2014,Random Forest,0.743,0.739
+2015-2019,Baseline,0.493,0.500
+2015-2019,Logistic Regression,0.752,0.752
+2015-2019,Random Forest,0.757,0.757
+2020-2024,Baseline,0.507,0.500
+2020-2024,Logistic Regression,0.761,0.762
+2020-2024,Random Forest,0.701,0.700
