@@ -24,10 +24,19 @@ def main():
 
     # Input features and target
     features = ["grid", "year", "constructorId", "circuitId"]
+    
+    # ============================================================
+    # RÉSULTATS PRINCIPAUX : 2000-2024
+    # ============================================================
+    print("\n" + "="*60)
+    print("RÉSULTATS PRINCIPAUX : Période 2000-2024")
+    print("="*60)
+    
     X = df[features].values
     y = df["top10"].values
 
-    print("\n=== Splitting train/test ===")
+    print(f"\nNombre total d'échantillons : {len(df)}")
+    print("\n=== Splitting train/test (80/20) ===")
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
@@ -40,11 +49,8 @@ def main():
     # ----------------------------
     # 1. Baseline Model
     # ----------------------------
-    print("\n=== Baseline model ===")
-
-    # Baseline: predict based only on grid position (first column of X_test)
+    print("\n--- Baseline Model ---")
     baseline_pred = baseline_predict(X_test[:, 0])
-
     baseline_acc, baseline_auc = evaluate_model(
         y_test,
         baseline_pred,
@@ -54,11 +60,9 @@ def main():
     # ----------------------------
     # 2. Logistic Regression
     # ----------------------------
-    print("\n=== Logistic Regression ===")
+    print("\n--- Logistic Regression ---")
     lr_model = train_logistic_regression(X_train, y_train)
-
     lr_pred = lr_model.predict(X_test)
-
     lr_acc, lr_auc = evaluate_model(
         y_test,
         lr_pred,
@@ -68,11 +72,9 @@ def main():
     # ----------------------------
     # 3. Random Forest
     # ----------------------------
-    print("\n=== Random Forest ===")
+    print("\n--- Random Forest ---")
     rf_model = train_random_forest(X_train, y_train)
-
     rf_pred = rf_model.predict(X_test)
-
     rf_acc, rf_auc = evaluate_model(
         y_test,
         rf_pred,
@@ -80,17 +82,23 @@ def main():
     )
 
     # ----------------------------
-    # Summary
+    # Summary Principal
     # ----------------------------
-    print("\n=== Summary ===")
-    print(f"Baseline           → Acc: {baseline_acc:.3f}, AUC: {baseline_auc:.3f}")
-    print(f"Logistic Regr.     → Acc: {lr_acc:.3f}, AUC: {lr_auc:.3f}")
-    print(f"Random Forest      → Acc: {rf_acc:.3f}, AUC: {rf_auc:.3f}")
+    print("\n" + "="*60)
+    print("RÉSUMÉ PRINCIPAL (2000-2024)")
+    print("="*60)
+    print(f"Baseline           → Acc: {baseline_acc:.3f} ({baseline_acc*100:.1f}%), AUC: {baseline_auc:.3f}")
+    print(f"Logistic Regr.     → Acc: {lr_acc:.3f} ({lr_acc*100:.1f}%), AUC: {lr_auc:.3f}")
+    print(f"Random Forest      → Acc: {rf_acc:.3f} ({rf_acc*100:.1f}%), AUC: {rf_auc:.3f}")
+    print("="*60)
 
-    # ----------------------------
-    # Period Analysis
-    # ----------------------------
-    print("\n=== Period Analysis (5-year intervals) ===")
+    # ============================================================
+    # RÉSULTATS SECONDAIRES : Analyse par périodes de 5 ans
+    # ============================================================
+    print("\n\n" + "="*60)
+    print("RÉSULTATS SECONDAIRES : Analyse par intervalles de 5 ans")
+    print("="*60)
+    
     periods = [
         (2000, 2004),
         (2005, 2009),
@@ -100,11 +108,15 @@ def main():
     ]
 
     for start_year, end_year in periods:
-        print(f"\n--- Period {start_year}-{end_year} ---")
+        print(f"\n{'─'*60}")
+        print(f"Période {start_year}-{end_year}")
+        print(f"{'─'*60}")
         period_df = df[(df['year'] >= start_year) & (df['year'] <= end_year)]
         if len(period_df) < 100:  # Skip if too small
-            print(f"Insufficient data for {start_year}-{end_year} ({len(period_df)} samples)")
+            print(f"⚠️  Données insuffisantes pour {start_year}-{end_year} ({len(period_df)} échantillons)")
             continue
+        
+        print(f"Échantillons : {len(period_df)}")
         
         X_period = period_df[features].values
         y_period = period_df["top10"].values
@@ -131,9 +143,13 @@ def main():
         rf_pred_p = rf_model_p.predict(X_test_p)
         rf_acc_p, rf_auc_p = evaluate_model(y_test_p, rf_pred_p, name=f"Random Forest {start_year}-{end_year}", verbose=False)
         
-        print(f"Baseline: Acc {baseline_acc_p:.3f}, AUC {baseline_auc_p:.3f}")
-        print(f"Logistic: Acc {lr_acc_p:.3f}, AUC {lr_auc_p:.3f}")
-        print(f"Random Forest: Acc {rf_acc_p:.3f}, AUC {rf_auc_p:.3f}")
+        print(f"  Baseline        → Acc: {baseline_acc_p:.3f} ({baseline_acc_p*100:.1f}%), AUC: {baseline_auc_p:.3f}")
+        print(f"  Logistic Regr.  → Acc: {lr_acc_p:.3f} ({lr_acc_p*100:.1f}%), AUC: {lr_auc_p:.3f}")
+        print(f"  Random Forest   → Acc: {rf_acc_p:.3f} ({rf_acc_p*100:.1f}%), AUC: {rf_auc_p:.3f}")
+    
+    print("\n" + "="*60)
+    print("Analyse terminée")
+    print("="*60)
 
 
 if __name__ == "__main__":
