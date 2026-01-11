@@ -1,5 +1,5 @@
 
-# Formula 1 Predictive Modeling (2000–2020)
+# Formula 1 Predictive Modeling (2000–2024)
 
 **Goal:** Build a predictive pipeline to determine whether a Formula 1 driver will finish **in the Top 10** based on grid position, constructor, circuit, and year.
 We compare three models:
